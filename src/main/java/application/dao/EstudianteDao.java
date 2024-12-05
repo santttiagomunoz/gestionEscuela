@@ -4,11 +4,13 @@ import application.db.DbConecction;
 import application.models.Estudiante;
 import application.models.Materia;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EstudianteDao {
 
@@ -48,7 +50,8 @@ public class EstudianteDao {
                             rs.getString("name"),
                             rs.getString("lastName"),
                             rs.getString("email"),
-                            rs.getString("password")
+                            rs.getString("password"),
+                            rs.getString("rol")
                     );
                 }
             }
@@ -56,6 +59,28 @@ public class EstudianteDao {
             e.printStackTrace();
         }
         return estudiante;
+    }
+
+    public static List<Estudiante> buscarEstudiantes(){
+        String query = "SELECT id, name, lastName, email FROM estudiantes";
+        List<Estudiante>estudiantes = new ArrayList<>();
+
+        try (Connection conn = connect.dbConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                Estudiante estudiante = new Estudiante();
+                estudiante.setId(rs.getLong("id"));
+                estudiante.setName(rs.getString("name"));
+                estudiante.setLastName(rs.getString("lastName"));
+                estudiante.setEmail(rs.getString("email"));
+                estudiantes.add(estudiante);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return estudiantes;
     }
 
     public static void actualizarEstudiante(Estudiante estudiante) {
@@ -95,4 +120,5 @@ public class EstudianteDao {
             e.printStackTrace();
         }
     }
+
 }

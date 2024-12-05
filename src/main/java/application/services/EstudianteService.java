@@ -1,5 +1,6 @@
 package application.services;
 
+import application.dao.CalificacionDao;
 import application.dao.EstudianteDao;
 import application.models.Estudiante;
 import application.models.Materia;
@@ -24,6 +25,7 @@ public class EstudianteService implements Crud{
             System.out.println("apellido estudiante: " + estudiante.getLastName());
         }
     }
+
 
     public void guardar() {
         Estudiante estudiante = new Estudiante();
@@ -69,9 +71,6 @@ public class EstudianteService implements Crud{
         }catch (Exception e){
             return "algo salio mal " + e;
         }
-
-
-
     }
 
     public void borrar() {
@@ -80,4 +79,11 @@ public class EstudianteService implements Crud{
         EstudianteDao.eliminarEstudiante(id);
 
     }
+
+    public void verCalificaciones(){
+        System.out.println("ingrese su id estudiante: ");
+        Long id = sc.nextLong();
+        CalificacionDao.obtenerCalificacionEstudiante(id);
+    }
+
 }

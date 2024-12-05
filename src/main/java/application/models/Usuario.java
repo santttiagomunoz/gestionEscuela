@@ -7,14 +7,16 @@ public class Usuario {
     private String lastName;
     private String email;
     private String password;
+    private String rol;
 
 
-    public Usuario(Long id, String name, String lastName, String email, String password) {
+    public Usuario(Long id, String name, String lastName, String email, String password, String rol) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.rol = rol;
 
     }
 
@@ -61,4 +63,11 @@ public class Usuario {
         this.password = password;
     }
 
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
 }

@@ -10,7 +10,7 @@ public class DbConecction {
     public Connection dbConnection(){
         try{
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/escuela", "root", "root");
-            System.out.println("conexion exitosa");
+            //System.out.println("conexion exitosa");
         }catch(SQLException e){
             e.printStackTrace();
             System.out.println("Algo salio mal");

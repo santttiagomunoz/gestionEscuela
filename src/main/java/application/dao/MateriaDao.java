@@ -2,23 +2,27 @@ package application.dao;
 
 import application.db.DbConecction;
 import application.models.Materia;
+import application.models.Profesor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MateriaDao {
 
     static final DbConecction connect = new DbConecction();
 
     public static void guardarMateria(Materia materia){
-        String query = "INSERT INTO materiaes (id, name) VALUES (?, ?)";
+        String query = "INSERT INTO materias (id, name, id_profesor) VALUES (?, ?, ?)";
         try (Connection conn = connect.dbConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setLong(1, materia.getId());
             stmt.setString(2, materia.getName());
+            stmt.setLong(3, materia.getId_profesor());
 
             stmt.executeUpdate();
             System.out.println("Materia guardado correctamente.");
@@ -28,7 +32,7 @@ public class MateriaDao {
     }
 
     public static Materia buscarMateria(Long id){
-        String query = "SELECT * FROM materiaes WHERE id = ?";
+        String query = "SELECT * FROM materias WHERE id = ?";
         Materia materia = null;
 
         try (Connection conn = connect.dbConnection();
@@ -40,7 +44,8 @@ public class MateriaDao {
                 if (rs.next()) {
                     materia = new Materia(
                             rs.getLong("id"),
-                            rs.getString("name")
+                            rs.getString("name"),
+                            rs.getLong("id_profesor")
                     );
                 }
             }
@@ -50,13 +55,35 @@ public class MateriaDao {
         return materia;
     }
 
+    public static List<Materia> buscarMaterias(){
+        String query = "SELECT id, name, lastName, email, speciality FROM profesores";
+        List<Materia>materias = new ArrayList<>();
+
+        try (Connection conn = connect.dbConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                Materia materia = new Materia();
+                materia.setId(rs.getLong("id"));
+                materia.setName(rs.getString("name"));
+                materia.setId_profesor(rs.getLong("id_profesor"));
+                materias.add(materia);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return materias;
+    }
+
     public static void actualizarMateria(Materia materia) {
-        String query = "UPDATE materias SET name = ?, lastName = ? WHERE id = ?";
+        String query = "UPDATE materias SET name = ?, id_profesor = ? WHERE id = ?";
         try (Connection conn = connect.dbConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, materia.getName());
-            stmt.setLong(2, materia.getId());
+            stmt.setLong(2, materia.getId_profesor());
+            stmt.setLong(3, materia.getId());
 
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {

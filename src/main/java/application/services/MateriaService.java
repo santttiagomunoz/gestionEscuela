@@ -1,8 +1,11 @@
 package application.services;
 
 import application.dao.MateriaDao;
+import application.dao.ProfesorDao;
 import application.models.Materia;
+import application.models.Profesor;
 
+import java.util.List;
 import java.util.Scanner;
 
 import static application.dao.MateriaDao.buscarMateria;
@@ -18,8 +21,20 @@ public class MateriaService implements Crud{
         Materia materia = buscarMateria(id);
 
         if(buscarMateria(id) != null){
-            System.out.println("id del materia: " + materia.getId());
+            Profesor profesor;
+            System.out.println("id de la materia: " + materia.getId());
             System.out.println("nombre del materia: " + materia.getName());
+            profesor = ProfesorDao.buscarProfesor(materia.getId_profesor());
+            System.out.println("profesor asignado: " + profesor.getName());
+        }
+    }
+
+    public void mostrarMaterias(){
+        List<Materia> materias = MateriaDao.buscarMaterias();
+        for (Materia materia: materias){
+            System.out.println("id_profesor: " + materia.getId());
+            System.out.println("nombre: " + materia.getName());
+            System.out.println("apellido: " + materia.getId_profesor());
         }
     }
 
@@ -35,6 +50,10 @@ public class MateriaService implements Crud{
         String nombre = sc.nextLine();
         materia.setName(nombre);
 
+        System.out.println("id del profesor:");
+        Long id_profesor = sc.nextLong();
+        materia.setId_profesor(id_profesor);
+
         MateriaDao.guardarMateria(materia);
     }
 
@@ -47,9 +66,11 @@ public class MateriaService implements Crud{
             Long id = sc.nextLong();
             System.out.println("ingrese nuevo nombre: ");
             String name = sc.next();
-
+            System.out.println("ingrese nuevo id profesor: ");
+            Long id_profesor = sc.nextLong();
             materia.setId(id);
             materia.setName(name);
+            materia.setId_profesor(id_profesor);
 
             MateriaDao.actualizarMateria(materia);
             return "materia actualizado";
